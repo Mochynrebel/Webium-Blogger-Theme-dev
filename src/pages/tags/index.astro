@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedPosts } from "../../utils/blog";
+
+const posts = await getPublishedPosts();
+const tagMap = new Map();
+
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    const slug = tag.toLowerCase().replace(/\s+/g, "-");
+    tagMap.set(slug, {
+      label: tag,
+      count: (tagMap.get(slug)?.count || 0) + 1
+    });
+  }
+}
+
+const tags = [...tagMap.entries()].map(([slug, value]) => ({ slug, ...value }));
+---
+
+<BaseLayout title="Tags | Webium" description="Browse posts by tag.">
+  <section class="panel">
+    <div class="eyebrow">Topics</div>
+    <h1 class="page-title">Browse the archive by tag.</h1>
+    <p class="lead">
+      Use topic pages to group posts around themes, workflows, and experiments.
+    </p>
+  </section>
+
+  <section class="tag-list">
+    {tags.map((tag) => (
+      <a class="tag-card" href={`/tags/${tag.slug}/`}>
+        <h2>#{tag.label}</h2>
+        <p>{tag.count} article{tag.count === 1 ? "" : "s"}</p>
+      </a>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import { getPublishedPosts } from "../../utils/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const tags = new Map();
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = tag.toLowerCase().replace(/\s+/g, "-");
+      tags.set(slug, tag);
+    }
+  }
+
+  return [...tags.entries()].map(([slug, label]) => ({
+    params: { tag: slug },
+    props: { label }
+  }));
+}
+
+const { label } = Astro.props;
+const currentSlug = Astro.params.tag;
+const posts = (await getPublishedPosts()).filter((post) =>
+  post.data.tags.some((tag) => tag.toLowerCase().replace(/\s+/g, "-") === currentSlug)
+);
+---
+
+<BaseLayout
+  title={`#${label} | Webium`}
+  description={`Posts filed under ${label}.`}
+>
+  <section class="panel">
+    <div class="eyebrow">Tag archive</div>
+    <h1 class="page-title">#{label}</h1>
+    <p class="lead">{posts.length} article{posts.length === 1 ? "" : "s"} in this topic.</p>
+  </section>
+
+  <section class="post-list">
+    {posts.map((post) => (
+      <ArticleCard post={post} />
+    ))}
+  </section>
+</BaseLayout>

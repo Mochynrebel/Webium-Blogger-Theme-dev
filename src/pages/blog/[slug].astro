@@ -1,0 +1,48 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedPosts, formatDate, readingTime } from "../../utils/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const minutes = readingTime(post.body);
+---
+
+<BaseLayout title={`${post.data.title} | Webium`} description={post.data.description}>
+  <div class="content-grid compact">
+    <section class="article-shell">
+      <article>
+        <header class="article-header">
+          <div class="eyebrow">{post.data.category}</div>
+          <h1 class="article-title">{post.data.title}</h1>
+          <p class="article-intro">{post.data.description}</p>
+          <div class="meta-row">
+            <span>{post.data.author}</span>
+            <span>•</span>
+            <time datetime={post.data.publishedAt.toISOString()}>
+              {formatDate(post.data.publishedAt)}
+            </time>
+            <span>•</span>
+            <span>{minutes}</span>
+          </div>
+          <div class="pill-row">
+            {post.data.tags.map((tag) => (
+              <a class="tag-pill" href={`/tags/${tag.toLowerCase().replace(/\s+/g, "-")}/`}>
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </header>
+        <Content />
+      </article>
+    </section>
+  </div>
+</BaseLayout>

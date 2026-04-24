@@ -1,0 +1,86 @@
+---
+import "../styles/global.css";
+import SiteChrome from "../components/SiteChrome.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import Icons from "../components/Icons.astro";
+import { site } from "../consts";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="site-frame">
+        <SiteChrome />
+        <div class="stack">
+          <slot />
+        </div>
+      </div>
+      <div class="mobile-nav-wrap" aria-label="Primary mobile">
+        <nav class="mobile-nav">
+          <a class="mobile-link" href="/" aria-label="Home">
+            <Icons name="home" />
+          </a>
+          <a class="mobile-link" href="/about" aria-label="About">
+            <Icons name="note" />
+          </a>
+          <a class="mobile-link" href="/tags" aria-label="Tags">
+            <Icons name="tag" />
+          </a>
+          <ThemeToggle />
+        </nav>
+      </div>
+      <footer class="footer-note">
+        <div class="footer-row" style="justify-content:center;">
+          <span>{site.title}</span>
+          <span>•</span>
+          <span>{site.description}</span>
+        </div>
+      </footer>
+    </main>
+    <script is:inline>
+      const root = document.documentElement;
+      const storageKey = "webium-theme";
+      const buttons = document.querySelectorAll("[data-theme-toggle]");
+
+      const applyTheme = (theme) => {
+        root.dataset.theme = theme;
+        buttons.forEach((button) => {
+          const sun = button.querySelector('[data-theme-icon="sun"]');
+          const moon = button.querySelector('[data-theme-icon="moon"]');
+          const dark = theme === "dark";
+          if (sun) sun.hidden = dark;
+          if (moon) moon.hidden = !dark;
+        });
+      };
+
+      const preferred =
+        localStorage.getItem(storageKey) ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      applyTheme(preferred);
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const next = root.dataset.theme === "dark" ? "light" : "dark";
+          localStorage.setItem(storageKey, next);
+          applyTheme(next);
+        });
+      });
+    </script>
+  </body>
+</html>

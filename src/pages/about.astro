@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About | Webium" description="About the Astro version of Webium.">
+  <div class="content-grid compact">
+    <section class="article-shell">
+      <article>
+        <div class="article-header">
+          <div class="eyebrow">About</div>
+          <h1 class="page-title">Webium is now a deployable Astro blog.</h1>
+          <p class="article-intro">
+            This rebuild keeps the editorial direction of the original Webium
+            Blogger theme, but replaces the Blogger XML runtime with Astro pages,
+            Markdown content, and a static build that fits Vercel cleanly.
+          </p>
+        </div>
+
+        <h2>How to publish</h2>
+        <ol>
+          <li>Create a new Markdown file inside <code>src/content/blog</code>.</li>
+          <li>Fill in the frontmatter fields for title, date, category, and tags.</li>
+          <li>Run <code>npm run dev</code> locally.</li>
+          <li>Push to GitHub and let Vercel build with <code>npm run build</code>.</li>
+        </ol>
+
+        <h2>Why Astro fits</h2>
+        <p>
+          Astro gives you a static-first content workflow, file-based routing, and
+          good Vercel support without carrying a heavier runtime than this site
+          needs.
+        </p>
+
+        <h2>What to customize next</h2>
+        <ul>
+          <li>Replace the placeholder site URL in <code>astro.config.mjs</code>.</li>
+          <li>Update site metadata in <code>src/consts.ts</code>.</li>
+          <li>Add your own posts and adjust the home page copy.</li>
+        </ul>
+      </article>
+    </section>
+  </div>
+</BaseLayout>

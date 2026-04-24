@@ -1,0 +1,26 @@
+---
+import { formatDate } from "../utils/blog";
+
+const { post } = Astro.props;
+---
+
+<article class="post-card">
+  <div class="meta-row">
+    <span>{post.data.category}</span>
+    <span>•</span>
+    <time datetime={post.data.publishedAt.toISOString()}>
+      {formatDate(post.data.publishedAt)}
+    </time>
+  </div>
+  <h2>
+    <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+  </h2>
+  <p>{post.data.description}</p>
+  <div class="pill-row">
+    {post.data.tags.map((tag) => (
+      <a class="tag-pill" href={`/tags/${tag.toLowerCase().replace(/\s+/g, "-")}/`}>
+        #{tag}
+      </a>
+    ))}
+  </div>
+</article>

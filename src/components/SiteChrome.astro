@@ -1,0 +1,21 @@
+---
+import Icons from "./Icons.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<aside class="rail" aria-label="Primary">
+  <div class="rail-card">
+    <div class="rail-stack">
+      <a class="rail-link" href="/" aria-label="Home">
+        <Icons name="home" />
+      </a>
+      <a class="rail-link" href="/about" aria-label="About">
+        <Icons name="note" />
+      </a>
+      <a class="rail-link" href="/tags" aria-label="Tags">
+        <Icons name="tag" />
+      </a>
+      <ThemeToggle />
+    </div>
+  </div>
+</aside>
